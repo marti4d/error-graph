@@ -1,6 +1,6 @@
 [package]
 name = "error-graph"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Chris Martin <marti4d@live.ca>"]
 edition = "2021"
 description = "Allows non-fatal errors in a tree of subfunctions to easily be collected by a caller"

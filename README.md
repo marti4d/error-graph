@@ -2,15 +2,15 @@
 
 Allows non-fatal errors in a tree of subfunctions to easily be collected by a caller
 
-Provides the [`error_graph::ErrorList<E>`][ErrorList] type to hold a list of non-fatal errors
+Provides the `error_graph::ErrorList<E>` type to hold a list of non-fatal errors
 that occurred while a function was running.
 
-It has a [`subwriter()`][WriteErrorList::subwriter] method that can be passed as a parameter to
+It has a `subwriter()` method that can be passed as a parameter to
 a subfunction and allows that subfunction to record all the non-fatal errors it encounters.
 When the subfunction is done running, its error list will be mapped to the caller's error type
-and added to the caller's [ErrorList] automatically.
+and added to the caller's `ErrorList` automatically.
 
-Since subfunctions may in-turn also use the [`subwriter()`][WriteErrorList::subwriter]
+Since subfunctions may in-turn also use the `subwriter()`
 function on the writter given to them by their caller, this creates a tree of non-fatal errors
 that occurred during the execution of an entire call graph.
 
@@ -110,23 +110,23 @@ subfunctions in its call graph.
 
 # Solution
 
-The main behavior we want is captured by the [WriteErrorList] trait in this crate. It can be
+The main behavior we want is captured by the `WriteErrorList` trait in this crate. It can be
 passed as a parameter to any function that wants to be able to report non-fatal errors to its
 caller, and it gives the caller flexibility to decide what it wants to do with that
 information.
 
-The main concrete type in this crate is [ErrorList], which stores a list of a single type of
+The main concrete type in this crate is `ErrorList`, which stores a list of a single type of
 error. Any time a list of errors needs to be stored in memory, this is the type to use. It will
-usually be created by the top-level caller using [ErrorList::default], and any subfunction will
-give an [ErrorList] of its own error type to the `map_fn` that was passed in by its caller upon
+usually be created by the top-level caller using `ErrorList::default`, and any subfunction will
+give an `ErrorList` of its own error type to the `map_fn` that was passed in by its caller upon
 return.
 
-However, [ErrorList] should rarely be passed as a parameter to a function, as that wouldn't
+However, `ErrorList` should rarely be passed as a parameter to a function, as that wouldn't
 provide the caller with the flexiblity to decide what strategy it actually wants
 to use when collecting its subfunction's non-fatal errors. The caller may want to pass direct
-reference to its own error list, it may want to pass a [Sublist] type that automatically
+reference to its own error list, it may want to pass a `Sublist` type that automatically
 pushes the subfunction's error list to its own error list after mapping, or it may want to
-pass the [DontCare] type if it doesn't want to know anything about the
+pass the `DontCare` type if it doesn't want to know anything about the
 subfunction's non-fatal errors.
 
 Instead, subfunctions should take `impl WriteErrorList<E>` as a parameter.
@@ -138,7 +138,7 @@ a caller that only cares how many non-fatal errors occurred but doesn't care abo
 
 (This section only applies if the `serde` feature is enabled)
 
-[ErrorList] implements the `Serialize` trait if the errors it contains do, and
+`ErrorList` implements the `Serialize` trait if the errors it contains do, and
 likewise with the `Deserialize` trait. This means that if every error type in the tree
 implements these traits then the entire tree can be sent over the wire and recreated elsewhere.
 Very useful if the errors are to be examined remotely!
